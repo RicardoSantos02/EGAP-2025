@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,21 +16,22 @@
             justify-content: center; /* Centraliza o conteúdo horizontalmente */
             align-items: center; /* Centraliza o conteúdo verticalmente */
             min-height: 100vh; /* Garante que o corpo ocupe a altura total da viewport */
-            padding: 1rem; /* Espaçamento interno responsivo para evitar que o conteúdo cole nas bordas */
+            padding: 2rem 1rem; /* Espaçamento interno responsivo (mais padding em cima/baixo) */
             box-sizing: border-box; /* Inclui padding e border no cálculo da largura/altura total */
             overflow-x: hidden; /* Previne rolagem horizontal indesejada em telas pequenas */
         }
 
         /* Estilo do Contêiner Principal (o "Card" do Calendário) */
         .calendar-card {
-            background: linear-gradient(135deg, #8B5CF6, #6D28D9); /* Gradiente roxo intenso como fundo */
+            /* Gradiente de fundo ajustado para corresponder à imagem */
+            background: linear-gradient(135deg, #4A2B8A, #2B4A8A); /* Cores baseadas na imagem */
             border-radius: 1.5rem; /* Cantos bem arredondados (equivalente a Tailwind rounded-3xl) */
             padding: 2rem; /* Espaçamento interno generoso (equivalente a Tailwind p-8) */
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6); /* Sombra pronunciada para dar profundidade */
-            max-width: 700px; /* Largura máxima para um layout de calendário em telas maiores */
+            max-width: 750px; /* Card maior, ajustado para a imagem */
             width: 100%; /* Ocupa 100% da largura disponível em telas menores */
             text-align: center; /* Centraliza o texto dentro do card */
-            border: 3px solid #C4B5FD; /* Borda brilhante para destaque visual */
+            border: 3px solid #A78BFA; /* Borda brilhante ajustada para a imagem */
             position: relative; /* Necessário para posicionar elementos internos de forma absoluta, se houver */
             overflow: hidden; /* Garante que elementos de fundo não vazem das bordas arredondadas */
         }
@@ -54,52 +57,79 @@
         .month-year {
             font-size: 1.5rem; /* Tamanho da fonte (equivalente a Tailwind text-2xl) */
             font-weight: 600; /* Peso da fonte semi-bold */
-            color: #FACC15; /* Amarelo vibrante para destaque */
+            color: #E0E7FF; /* Azul claro, similar ao da imagem */
             margin-bottom: 2rem; /* Margem inferior (equivalente a Tailwind mb-8) */
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Sombra sutil no texto */
         }
 
-        /* Estilo da Grade dos Dias do Calendário */
+        /* Estilo da Grade dos Dias do Calendário (para os cards de cada dia) */
         .days-grid {
-            display: grid; /* Usa Grid para organizar os dias */
-            grid-template-columns: 1fr; /* Por padrão, uma coluna para celulares (mobile-first) */
-            gap: 1.5rem; /* Espaçamento entre os itens da grade (equivalente a Tailwind gap-5) */
+            display: flex; /* Usa Flexbox para os dias, permitindo que eles se organizem */
+            flex-direction: column; /* Por padrão, empilha os dias verticalmente */
+            gap: 1.5rem; /* Espaçamento entre os cards de cada dia */
             margin-bottom: 2rem; /* Margem inferior */
         }
-        /* Ajuste da Grade para Telas Maiores (tablets e desktops) */
-        @media (min-width: 640px) { /* Aplica-se a telas com largura mínima de 640px (breakpoint 'sm') */
-            .days-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas adaptáveis: tenta encaixar o máximo de colunas de no mínimo 280px */
-            }
-        }
 
-        /* Estilo de Cada "Dia" Individual no Calendário */
+        /* Estilo de Cada "Dia" Individual no Calendário (o card que contém a data e os eventos) */
         .calendar-day {
-            background-color: rgba(255, 255, 255, 0.15); /* Fundo semi-transparente para o card do dia */
+            /* Fundo semi-transparente para o card do dia, ajustado para a imagem */
+            background-color: rgba(43, 74, 138, 0.4); /* Cor mais escura e opaca da imagem */
             border-radius: 1rem; /* Cantos arredondados (equivalente a Tailwind rounded-xl) */
             padding: 1.25rem; /* Espaçamento interno (equivalente a Tailwind p-5) */
             text-align: left; /* Alinha o texto à esquerda dentro do card do dia */
             border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil */
             backdrop-filter: blur(8px); /* Efeito de vidro fosco mais intenso */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para o card do dia */
+
+            display: flex; /* Usa Flexbox para organizar a data e os eventos lado a lado */
+            flex-direction: column; /* Por padrão, empilha a data e os eventos em celulares */
+            gap: 1rem; /* Espaçamento entre a data e a lista de eventos */
         }
 
-        /* Estilo do Número do Dia */
-        .day-number {
-            font-size: 2.5rem; /* Tamanho da fonte grande (equivalente a Tailwind text-5xl) */
+        /* Ajuste do layout do dia para telas maiores (data e eventos lado a lado) */
+        @media (min-width: 640px) { /* Aplica-se a telas com largura mínima de 640px (breakpoint 'sm') */
+            .calendar-day {
+                flex-direction: row; /* Coloca a data e os eventos lado a lado */
+                align-items: flex-start; /* Alinha o topo dos elementos */
+            }
+        }
+
+        /* Contêiner para o número e nome do dia */
+        .day-header {
+            flex-shrink: 0; /* Impede que este item encolha */
+            width: 100%; /* Ocupa largura total em mobile */
+            text-align: center; /* Centraliza o texto em mobile */
+        }
+        @media (min-width: 640px) {
+            .day-header {
+                width: 100px; /* Largura fixa para a coluna da data em desktop */
+                text-align: left; /* Alinha o texto à esquerda em desktop */
+                margin-right: 1.5rem; /* Espaçamento à direita do cabeçalho do dia */
+            }
+        }
+
+        /* Estilo do Número do Dia (grande) */
+        .day-number-large {
+            color: #8B5CF6; /* Roxo vibrante, similar ao da imagem */
+            font-size: 3rem; /* Tamanho da fonte maior para o número (similar à imagem) */
             font-weight: 900; /* Peso da fonte extra bold (black) */
-            color: #FACC15; /* Amarelo para destaque */
             line-height: 1; /* Altura da linha compacta */
-            margin-bottom: 0.5rem; /* Margem inferior (equivalente a Tailwind mb-2) */
+            margin-bottom: 0.25rem; /* Margem inferior pequena */
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra no texto do número */
         }
 
-        /* Estilo do Nome do Dia da Semana */
-        .day-name {
-            font-size: 1.125rem; /* Tamanho da fonte (equivalente a Tailwind text-lg) */
+        /* Estilo do Nome do Dia da Semana (grande) */
+        .day-name-large {
+            font-size: 1.25rem; /* Tamanho da fonte (equivalente a Tailwind text-xl) */
             font-weight: bold; /* Peso da fonte bold */
             color: #fff; /* Cor do texto branca */
-            margin-bottom: 1rem; /* Margem inferior (equivalente a Tailwind mb-4) */
+            margin-bottom: 1rem; /* Margem inferior */
+        }
+
+        /* Contêiner para a lista de eventos de um dia */
+        .day-events-container {
+            flex-grow: 1; /* Permite que este item ocupe o espaço restante */
+            width: 100%; /* Ocupa largura total em mobile */
         }
 
         /* Estilo da Lista de Eventos para Cada Dia */
@@ -111,38 +141,44 @@
 
         /* Estilo de Cada Item Individual de Evento */
         .event-item {
-            background-color: rgba(0, 0, 0, 0.2); /* Fundo mais escuro para o item do evento */
-            border-radius: 0.75rem; /* Cantos arredondados (equivalente a Tailwind rounded-lg) */
-            padding: 0.75rem; /* Espaçamento interno (equivalente a Tailwind p-3) */
-            margin-bottom: 0.75rem; /* Margem inferior entre os eventos */
-            border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
-            transition: background-color 0.2s ease; /* Transição suave para o efeito hover */
+            /* Fundo dos itens de evento, ajustado para a imagem (sem fundo individual, mas com padding e margem) */
+            padding: 0.5rem 0; /* Espaçamento interno vertical */
+            margin-bottom: 0.5rem; /* Margem inferior entre os eventos */
+            display: flex; /* Usa Flexbox para alinhar hora e detalhes do evento */
+            align-items: flex-start; /* Alinha o topo dos elementos */
+            gap: 0.5rem; /* Espaçamento entre o ícone/hora e os detalhes */
         }
         .event-item:last-child {
             margin-bottom: 0; /* Remove a margem inferior do último item para um espaçamento consistente */
         }
-        .event-item:hover {
-            background-color: rgba(0, 0, 0, 0.3); /* Escurece o fundo no hover */
+
+        /* Estilo do Horário do Evento */
+        .event-time {
+            font-size: 0.9375rem; /* Tamanho da fonte */
+            font-weight: 600; /* Semi-bold */
+            color: #E2E8F0; /* Cor do texto */
+            flex-shrink: 0; /* Impede que o horário encolha */
+            width: 60px; /* Largura fixa para o horário */
         }
 
-        /* Estilo do Título do Evento */
-        .event-title {
-            font-size: 1rem; /* Tamanho da fonte (equivalente a Tailwind text-base) */
-            font-weight: 600; /* Peso da fonte semi-bold */
-            color: #fff; /* Cor do texto branca */
-            margin-bottom: 0.25rem; /* Margem inferior (equivalente a Tailwind mb-1) */
-        }
-
-        /* Estilo dos Detalhes do Evento (horário, local, estilo) */
-        .event-details {
-            font-size: 0.875rem; /* Tamanho da fonte menor (equivalente a Tailwind text-sm) */
-            color: #cbd5e0; /* Cor do texto cinza claro */
+        /* Estilo do Texto dos Detalhes do Evento */
+        .event-details-text {
+            flex-grow: 1; /* Permite que os detalhes ocupem o espaço restante */
+            font-size: 0.9375rem; /* Tamanho da fonte */
+            color: #E2E8F0; /* Cor do texto */
             line-height: 1.4; /* Altura da linha para melhor leitura */
         }
 
-        /* Estilo do Botão de Chamada para Ação (Call To Action) */
+        /* Estilo do Título do Evento dentro dos detalhes */
+        .event-title {
+            font-weight: bold; /* Título em negrito */
+            color: #fff; /* Cor do texto branca */
+            margin-right: 0.25rem; /* Pequena margem à direita para separar do local */
+        }
+
+        /* Botão de Chamada para Ação (Call To Action) */
         .cta-button {
-            background-color: #FACC15; /* Amarelo vibrante como fundo */
+            background-color: #FACC15; /* Amarelo vibrante como fundo (similar ao da imagem) */
             color: #1A202C; /* Texto escuro para contraste */
             padding: 0.875rem 2rem; /* Espaçamento interno (equivalente a Tailwind py-3.5 px-8) */
             border-radius: 0.75rem; /* Cantos arredondados (equivalente a Tailwind rounded-xl) */
@@ -177,75 +213,87 @@
         <div class="days-grid">
             <!-- Dia 15 de Julho -->
             <div class="calendar-day">
-                <div class="day-number">15</div>
-                <div class="day-name">Terça-feira</div>
-                <ul class="event-list">
-                    <li class="event-item">
-                        <div class="event-title">Magic The Gathering</div>
-                        <div class="event-details">
-                            ⏰ 10:00 | 📍 Board Games<br>
-                            Estilo: Rodadas Suíças
-                        </div>
-                    </li>
-                    <li class="event-item">
-                        <div class="event-title">Tetris</div>
-                        <div class="event-details">
-                            ⏰ 14:00 | 📍 Fliperama<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                    <li class="event-item">
-                        <div class="event-title">Smash Bros Crusade</div>
-                        <div class="event-details">
-                            ⏰ 10:00 | 📍 Fliperama<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                </ul>
+                <div class="day-header">
+                    <div class="day-number-large">15</div>
+                    <div class="day-name-large">Terça-feira</div>
+                </div>
+                <div class="day-events-container">
+                    <ul class="event-list">
+                        <li class="event-item">
+                            <div class="event-time">⏰ 10:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Magic The Gathering</span> | 📍 Board Games<br>
+                                Estilo: Rodadas Suíças
+                            </div>
+                        </li>
+                        <li class="event-item">
+                            <div class="event-time">⏰ 14:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Tetris</span> | 📍 Fliperama<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                        <li class="event-item">
+                            <div class="event-time">⏰ 10:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Smash Bros Crusade</span> | 📍 Fliperama<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Dia 16 de Julho -->
             <div class="calendar-day">
-                <div class="day-number">16</div>
-                <div class="day-name">Quarta-feira</div>
-                <ul class="event-list">
-                    <li class="event-item">
-                        <div class="event-title">Pokemon VGC</div>
-                        <div class="event-details">
-                            ⏰ 08:00 | 📍 Fliperama<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                    <li class="event-item">
-                        <div class="event-title">Cubo Mágico</div>
-                        <div class="event-details">
-                            ⏰ 14:00 | 📍 Board Games<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                </ul>
+                <div class="day-header">
+                    <div class="day-number-large">16</div>
+                    <div class="day-name-large">Quarta-feira</div>
+                </div>
+                <div class="day-events-container">
+                    <ul class="event-list">
+                        <li class="event-item">
+                            <div class="event-time">⏰ 08:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Pokemon VGC</span> | 📍 Fliperama<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                        <li class="event-item">
+                            <div class="event-time">⏰ 14:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Cubo Mágico</span> | 📍 Board Games<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Dia 17 de Julho -->
             <div class="calendar-day">
-                <div class="day-number">17</div>
-                <div class="day-name">Quinta-feira</div>
-                <ul class="event-list">
-                    <li class="event-item">
-                        <div class="event-title">Mario Kart</div>
-                        <div class="event-details">
-                            ⏰ 08:00 | 📍 Fliperama.<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                    <li class="event-item">
-                        <div class="event-title">Mario Tennis</div>
-                        <div class="event-details">
-                            ⏰ 13:00 | 📍 Fliperama<br>
-                            Estilo: Mata-Mata
-                        </div>
-                    </li>
-                </ul>
+                <div class="day-header">
+                    <div class="day-number-large">17</div>
+                    <div class="day-name-large">Quinta-feira</div>
+                </div>
+                <div class="day-events-container">
+                    <ul class="event-list">
+                        <li class="event-item">
+                            <div class="event-time">⏰ 08:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Mario Kart</span> | 📍 Fliperama.<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                        <li class="event-item">
+                            <div class="event-time">⏰ 13:00</div>
+                            <div class="event-details-text">
+                                <span class="event-title">Mario Tennis</span> | 📍 Fliperama<br>
+                                Estilo: Mata-Mata
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -255,4 +303,5 @@
         <p class="profile-text">@encontrogeek_ifrn</p>
     </div>
 </body>
+</html>
 
