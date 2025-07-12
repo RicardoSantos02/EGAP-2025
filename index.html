@@ -7,33 +7,28 @@
     <!-- Tailwind CSS CDN para estilização rápida e responsiva -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilos Globais do Corpo da Página */
+        /* Estilos Globais do Corpo da Página (agora o "card" principal) */
         body {
             font-family: 'Inter', sans-serif; /* Define a fonte Inter como padrão para todo o corpo */
-            background-color: #1a202c; /* Fundo escuro para um contraste forte com o conteúdo */
+            /* Gradiente de fundo ajustado para corresponder à imagem e preencher a tela toda */
+            background: linear-gradient(135deg, #4A2B8A, #2B4A8A); /* Cores baseadas na imagem */
             color: #e2e8f0; /* Cor do texto padrão (claro) */
-            display: flex; /* Usa Flexbox para centralizar o conteúdo na tela */
-            justify-content: center; /* Centraliza o conteúdo horizontalmente */
-            align-items: center; /* Centraliza o conteúdo verticalmente */
+            display: flex; /* Usa Flexbox para centralizar o conteúdo */
+            flex-direction: column; /* Organiza o conteúdo em coluna */
+            justify-content: flex-start; /* Alinha o conteúdo ao topo */
+            align-items: center; /* Centraliza o conteúdo horizontalmente */
             min-height: 100vh; /* Garante que o corpo ocupe a altura total da viewport */
             padding: 2rem 1rem; /* Espaçamento interno responsivo (mais padding em cima/baixo) */
             box-sizing: border-box; /* Inclui padding e border no cálculo da largura/altura total */
             overflow-x: hidden; /* Previne rolagem horizontal indesejada em telas pequenas */
+            /* Removidas as sombras e bordas do card, pois agora é a tela toda */
         }
 
-        /* Estilo do Contêiner Principal (o "Card" do Calendário) */
-        .calendar-card {
-            /* Gradiente de fundo ajustado para corresponder à imagem */
-            background: linear-gradient(135deg, #4A2B8A, #2B4A8A); /* Cores baseadas na imagem */
-            border-radius: 1.5rem; /* Cantos bem arredondados (equivalente a Tailwind rounded-3xl) */
-            padding: 2rem; /* Espaçamento interno generoso (equivalente a Tailwind p-8) */
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6); /* Sombra pronunciada para dar profundidade */
-            max-width: 750px; /* Card maior, ajustado para a imagem */
-            width: 100%; /* Ocupa 100% da largura disponível em telas menores */
-            text-align: center; /* Centraliza o texto dentro do card */
-            border: 3px solid #A78BFA; /* Borda brilhante ajustada para a imagem */
-            position: relative; /* Necessário para posicionar elementos internos de forma absoluta, se houver */
-            overflow: hidden; /* Garante que elementos de fundo não vazem das bordas arredondadas */
+        /* Contêiner para o conteúdo principal, para limitar a largura em telas grandes */
+        .main-content-wrapper {
+            max-width: 750px; /* Largura máxima para o conteúdo, como o antigo card */
+            width: 100%; /* Ocupa 100% da largura disponível */
+            text-align: center; /* Centraliza o texto */
         }
 
         /* Estilo do Título Principal do Calendário */
@@ -204,7 +199,7 @@
     </style>
 </head>
 <body>
-    <div class="calendar-card">
+    <div class="main-content-wrapper">
         <h1 class="calendar-title">
             🗓️ CALENDÁRIO DE TORNEIOS 🗓️
         </h1>
@@ -291,9 +286,9 @@
                                 <span class="event-title">Mario Tennis</span> | 📍 Fliperama<br>
                                 Estilo: Mata-Mata
                             </div>
-                        </li>
-                    </ul>
-                </div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
 
