@@ -1,0 +1,258 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Torneios - Encontro Geek IFRN</title>
+    <!-- Tailwind CSS CDN para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos Globais do Corpo da Página */
+        body {
+            font-family: 'Inter', sans-serif; /* Define a fonte Inter como padrão para todo o corpo */
+            background-color: #1a202c; /* Fundo escuro para um contraste forte com o conteúdo */
+            color: #e2e8f0; /* Cor do texto padrão (claro) */
+            display: flex; /* Usa Flexbox para centralizar o conteúdo na tela */
+            justify-content: center; /* Centraliza o conteúdo horizontalmente */
+            align-items: center; /* Centraliza o conteúdo verticalmente */
+            min-height: 100vh; /* Garante que o corpo ocupe a altura total da viewport */
+            padding: 1rem; /* Espaçamento interno responsivo para evitar que o conteúdo cole nas bordas */
+            box-sizing: border-box; /* Inclui padding e border no cálculo da largura/altura total */
+            overflow-x: hidden; /* Previne rolagem horizontal indesejada em telas pequenas */
+        }
+
+        /* Estilo do Contêiner Principal (o "Card" do Calendário) */
+        .calendar-card {
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9); /* Gradiente roxo intenso como fundo */
+            border-radius: 1.5rem; /* Cantos bem arredondados (equivalente a Tailwind rounded-3xl) */
+            padding: 2rem; /* Espaçamento interno generoso (equivalente a Tailwind p-8) */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6); /* Sombra pronunciada para dar profundidade */
+            max-width: 700px; /* Largura máxima para um layout de calendário em telas maiores */
+            width: 100%; /* Ocupa 100% da largura disponível em telas menores */
+            text-align: center; /* Centraliza o texto dentro do card */
+            border: 3px solid #C4B5FD; /* Borda brilhante para destaque visual */
+            position: relative; /* Necessário para posicionar elementos internos de forma absoluta, se houver */
+            overflow: hidden; /* Garante que elementos de fundo não vazem das bordas arredondadas */
+        }
+
+        /* Estilo do Título Principal do Calendário */
+        .calendar-title {
+            font-size: 2.25rem; /* Tamanho da fonte grande (equivalente a Tailwind text-4xl) */
+            font-weight: 800; /* Peso da fonte extra bold */
+            color: #fff; /* Cor do texto branca */
+            margin-bottom: 1rem; /* Margem inferior (equivalente a Tailwind mb-4) */
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* Sombra no texto para destaque */
+            letter-spacing: 0.075em; /* Espaçamento entre as letras */
+            line-height: 1.2; /* Altura da linha para melhor legibilidade */
+        }
+        /* Ajuste do Título para Telas Menores (abordagem mobile-first) */
+        @media (max-width: 639px) { /* Aplica-se a telas com largura máxima de 639px (menores que o breakpoint 'sm') */
+            .calendar-title {
+                font-size: 1.875rem; /* Reduz o tamanho da fonte para telas pequenas (equivalente a Tailwind text-3xl) */
+            }
+        }
+
+        /* Estilo do Subtítulo do Período (Mês/Ano) */
+        .month-year {
+            font-size: 1.5rem; /* Tamanho da fonte (equivalente a Tailwind text-2xl) */
+            font-weight: 600; /* Peso da fonte semi-bold */
+            color: #FACC15; /* Amarelo vibrante para destaque */
+            margin-bottom: 2rem; /* Margem inferior (equivalente a Tailwind mb-8) */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Sombra sutil no texto */
+        }
+
+        /* Estilo da Grade dos Dias do Calendário */
+        .days-grid {
+            display: grid; /* Usa Grid para organizar os dias */
+            grid-template-columns: 1fr; /* Por padrão, uma coluna para celulares (mobile-first) */
+            gap: 1.5rem; /* Espaçamento entre os itens da grade (equivalente a Tailwind gap-5) */
+            margin-bottom: 2rem; /* Margem inferior */
+        }
+        /* Ajuste da Grade para Telas Maiores (tablets e desktops) */
+        @media (min-width: 640px) { /* Aplica-se a telas com largura mínima de 640px (breakpoint 'sm') */
+            .days-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas adaptáveis: tenta encaixar o máximo de colunas de no mínimo 280px */
+            }
+        }
+
+        /* Estilo de Cada "Dia" Individual no Calendário */
+        .calendar-day {
+            background-color: rgba(255, 255, 255, 0.15); /* Fundo semi-transparente para o card do dia */
+            border-radius: 1rem; /* Cantos arredondados (equivalente a Tailwind rounded-xl) */
+            padding: 1.25rem; /* Espaçamento interno (equivalente a Tailwind p-5) */
+            text-align: left; /* Alinha o texto à esquerda dentro do card do dia */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil */
+            backdrop-filter: blur(8px); /* Efeito de vidro fosco mais intenso */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para o card do dia */
+        }
+
+        /* Estilo do Número do Dia */
+        .day-number {
+            font-size: 2.5rem; /* Tamanho da fonte grande (equivalente a Tailwind text-5xl) */
+            font-weight: 900; /* Peso da fonte extra bold (black) */
+            color: #FACC15; /* Amarelo para destaque */
+            line-height: 1; /* Altura da linha compacta */
+            margin-bottom: 0.5rem; /* Margem inferior (equivalente a Tailwind mb-2) */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra no texto do número */
+        }
+
+        /* Estilo do Nome do Dia da Semana */
+        .day-name {
+            font-size: 1.125rem; /* Tamanho da fonte (equivalente a Tailwind text-lg) */
+            font-weight: bold; /* Peso da fonte bold */
+            color: #fff; /* Cor do texto branca */
+            margin-bottom: 1rem; /* Margem inferior (equivalente a Tailwind mb-4) */
+        }
+
+        /* Estilo da Lista de Eventos para Cada Dia */
+        .event-list {
+            list-style: none; /* Remove os marcadores de lista padrão */
+            padding: 0; /* Remove o padding padrão da lista */
+            margin: 0; /* Remove a margem padrão da lista */
+        }
+
+        /* Estilo de Cada Item Individual de Evento */
+        .event-item {
+            background-color: rgba(0, 0, 0, 0.2); /* Fundo mais escuro para o item do evento */
+            border-radius: 0.75rem; /* Cantos arredondados (equivalente a Tailwind rounded-lg) */
+            padding: 0.75rem; /* Espaçamento interno (equivalente a Tailwind p-3) */
+            margin-bottom: 0.75rem; /* Margem inferior entre os eventos */
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Borda sutil */
+            transition: background-color 0.2s ease; /* Transição suave para o efeito hover */
+        }
+        .event-item:last-child {
+            margin-bottom: 0; /* Remove a margem inferior do último item para um espaçamento consistente */
+        }
+        .event-item:hover {
+            background-color: rgba(0, 0, 0, 0.3); /* Escurece o fundo no hover */
+        }
+
+        /* Estilo do Título do Evento */
+        .event-title {
+            font-size: 1rem; /* Tamanho da fonte (equivalente a Tailwind text-base) */
+            font-weight: 600; /* Peso da fonte semi-bold */
+            color: #fff; /* Cor do texto branca */
+            margin-bottom: 0.25rem; /* Margem inferior (equivalente a Tailwind mb-1) */
+        }
+
+        /* Estilo dos Detalhes do Evento (horário, local, estilo) */
+        .event-details {
+            font-size: 0.875rem; /* Tamanho da fonte menor (equivalente a Tailwind text-sm) */
+            color: #cbd5e0; /* Cor do texto cinza claro */
+            line-height: 1.4; /* Altura da linha para melhor leitura */
+        }
+
+        /* Estilo do Botão de Chamada para Ação (Call To Action) */
+        .cta-button {
+            background-color: #FACC15; /* Amarelo vibrante como fundo */
+            color: #1A202C; /* Texto escuro para contraste */
+            padding: 0.875rem 2rem; /* Espaçamento interno (equivalente a Tailwind py-3.5 px-8) */
+            border-radius: 0.75rem; /* Cantos arredondados (equivalente a Tailwind rounded-xl) */
+            font-weight: 700; /* Peso da fonte bold */
+            text-decoration: none; /* Remove sublinhado do link */
+            display: inline-block; /* Permite aplicar padding e margin como um bloco, mas mantém o fluxo inline */
+            margin-top: 2rem; /* Margem superior (equivalente a Tailwind mt-8) */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Transições suaves para hover */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra para o botão */
+        }
+        .cta-button:hover {
+            background-color: #FDE047; /* Amarelo mais claro no hover */
+            transform: translateY(-3px); /* Pequeno efeito de levitar no hover */
+        }
+
+        /* Estilo do Texto do Perfil do Instagram */
+        .profile-text {
+            font-size: 1rem; /* Tamanho da fonte (equivalente a Tailwind text-base) */
+            color: #D1D5DB; /* Cinza claro */
+            margin-top: 1.5rem; /* Margem superior (equivalente a Tailwind mt-6) */
+            font-weight: 600; /* Peso da fonte semi-bold */
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-card">
+        <h1 class="calendar-title">
+            🗓️ CALENDÁRIO DE TORNEIOS 🗓️
+        </h1>
+        <p class="month-year">Julho de 2025</p>
+
+        <div class="days-grid">
+            <!-- Dia 15 de Julho -->
+            <div class="calendar-day">
+                <div class="day-number">15</div>
+                <div class="day-name">Terça-feira</div>
+                <ul class="event-list">
+                    <li class="event-item">
+                        <div class="event-title">Tetris</div>
+                        <div class="event-details">
+                            ⏰ 14:00 | 📍 Fliperama<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                    <li class="event-item">
+                        <div class="event-title">Smash Bros Crusade</div>
+                        <div class="event-details">
+                            ⏰ 10:00 | 📍 Fliperama<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Dia 16 de Julho -->
+            <div class="calendar-day">
+                <div class="day-number">16</div>
+                <div class="day-name">Quarta-feira</div>
+                <ul class="event-list">
+                    <li class="event-item">
+                        <div class="event-title">Magic The Gathering</div>
+                        <div class="event-details">
+                            ⏰ 10:00 | 📍 Board Games<br>
+                            Estilo: Rodadas Suíças
+                        </div>
+                    </li>
+                    <li class="event-item">
+                        <div class="event-title">Pokemon VGC</div>
+                        <div class="event-details">
+                            ⏰ 08:00 | 📍 Fliperama<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                    <li class="event-item">
+                        <div class="event-title">Cubo Mágico</div>
+                        <div class="event-details">
+                            ⏰ 14:00 | 📍 Board Games<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Dia 17 de Julho -->
+            <div class="calendar-day">
+                <div class="day-number">17</div>
+                <div class="day-name">Quinta-feira</div>
+                <ul class="event-list">
+                    <li class="event-item">
+                        <div class="event-title">Mario Kart</div>
+                        <div class="event-details">
+                            ⏰ 08:00 | 📍 Fliperama.<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                    <li class="event-item">
+                        <div class="event-title">Mario Tennis</div>
+                        <div class="event-details">
+                            ⏰ 13:00 | 📍 Fliperama<br>
+                            Estilo: Mata-Mata
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <a href="https://www.instagram.com/encontrogeek_ifrn" target="_blank" class="cta-button">
+            ✨ Não Perca! Siga-nos no Instagram! ✨
+        </a>
+        <p class="profile-text">@encontrogeek_ifrn</p>
+    </div>
+</body>
+
